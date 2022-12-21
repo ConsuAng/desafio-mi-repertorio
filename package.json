@@ -1,0 +1,12 @@
+{
+  "name": "desafio-mi-repertorio",
+  "version": "1.0.0",
+  "description": "desafio node express.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Fernando Munoz, Daniel San Juan, Cristian Venegas, Consuelo Anguita",
+  "license": "ISC"
+}
