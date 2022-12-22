@@ -1,44 +1,67 @@
+const fs = require("fs");
 const express = require("express");
 const app = express();
-const fs = require("fs");
+const cors = require("cors");
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  try {
+    res.sendFile(__dirname + "/index.html");
+  } catch (error) {
+    res.json({ message: "El recurso no esta disponible " });
+  }
 });
 
 app.get("/canciones", (req, res) => {
-  const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
-  res.json(canciones);
+  try {
+    const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
+    res.json(canciones);
+  } catch (error) {
+    res.json({ message: "El recurso no esta disponible " });
+  }
 });
 
 app.post("/canciones", (req, res) => {
-  const cancion = req.body;
-  const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
-  fs.writeFileSync("repertorios.json", JSON.stringify([...canciones, cancion]));
-  res.send("cancion agregada");
+  try {
+    const cancion = req.body;
+    const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
+    fs.writeFileSync(
+      "repertorios.json",
+      JSON.stringify([...canciones, cancion])
+    );
+    res.send("cancion agregada");
+  } catch (error) {
+    res.json({ message: "El recurso no esta disponible " });
+  }
 });
 
 app.put("/canciones/:id", (req, res) => {
-  const { id } = req.params;
-  const cancion = req.body;
-  const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
-
-  const index = canciones.findIndex((cancion) => cancion.id === parseInt(id));
-  canciones[index] = cancion;
-  fs.writeFileSync("repertorios.json", JSON.stringify(canciones));
-  res.send("cancion actualizada");
+  try {
+    const { id } = req.params;
+    const cancion = req.body;
+    const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
+    const index = canciones.findIndex((cancion) => cancion.id === parseInt(id));
+    canciones[index] = cancion;
+    fs.writeFileSync("repertorios.json", JSON.stringify(canciones));
+    res.send("cancion actualizada");
+  } catch (error) {
+    res.json({ message: "El recurso no esta disponible " });
+  }
 });
 
 app.delete("/canciones/:id", (req, res) => {
-  const { id } = req.params;
-  const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
-
-  const index = canciones.findIndex((cancion) => cancion.id === parseInt(id));
-  canciones.splice(index, 1);
-  fs.writeFileSync("repertorios.json", JSON.stringify(canciones));
-  res.send("cancion eliminada");
+  try {
+    const { id } = req.params;
+    const canciones = JSON.parse(fs.readFileSync("repertorios.json", "utf8"));
+    const index = canciones.findIndex((cancion) => cancion.id === parseInt(id));
+    canciones.splice(index, 1);
+    fs.writeFileSync("repertorios.json", JSON.stringify(canciones));
+    res.send("cancion eliminada");
+  } catch (error) {
+    res.json({ message: "El recurso no esta disponible " });
+  }
 });
 
 app.listen(3000, console.log("encendido"));
